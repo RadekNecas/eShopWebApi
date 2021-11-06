@@ -33,6 +33,8 @@ namespace eShopWebApi
                     options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
             }
 
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(EntityFrameworkRepository<>));
+
             services.AddControllers();
         }
 
