@@ -34,6 +34,7 @@ namespace eShopWebApi
             }
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EntityFrameworkRepository<>));
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
         }
