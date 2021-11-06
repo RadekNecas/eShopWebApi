@@ -1,6 +1,19 @@
 version: "3.9"
 services:
+    sqlserver:
+        image: "mcr.microsoft.com/mssql/server"
+        expose:
+            - 1433
+        environment:
+            SA_PASSWORD: "SecretPassword123@eShopWebApi"
+            ACCEPT_EULA: "Y"
     webapi:
         build: .
         ports: 
             - "5000:80"
+        depends_on:
+            - database
+        environment:
+            ConnectionStrings__ApplicationDbConnection: "Server=sqlserver;Database=eShopWebApi;User=sa;Password=SecretPassword123@eShopWebApi;MultipleActiveResultSets=true"
+            eShopWebApi__UseInMemoryApplicationDb: "false"
+            eShopWebApi__ApplyDbMigrationIfNeeded: "true"
