@@ -22,7 +22,7 @@ namespace eShopWebApi.Middlewares
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var response = context.Response;
                 response.ContentType = "application/json";

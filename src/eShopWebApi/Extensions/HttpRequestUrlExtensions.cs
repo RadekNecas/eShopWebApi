@@ -11,6 +11,7 @@ namespace eShopWebApi.Extensions
     {
         /// <summary>
         /// <returns>Uri builder with constructed URL from current request without query and fragment parts.</returns>
+        /// </summary>
         public static UriBuilder GetUriBuilderWithCurrentBaseUrl(this HttpRequest httpRequest)
         {
             var defaultPort = httpRequest.IsHttps ? 443 : 80;

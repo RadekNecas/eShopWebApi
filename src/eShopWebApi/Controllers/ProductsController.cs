@@ -79,7 +79,6 @@ namespace eShopWebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(EmptyResponse))]
         public async Task<ActionResult<GetProductResponse>>GetProduct(int id)
         {
-            throw new ArgumentException();
             var product = await _productService.GetProductAsync(id);
             if(product == null)
             {
