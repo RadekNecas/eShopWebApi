@@ -2,6 +2,7 @@
 using eShopWebApi.Core.Tools;
 using eShopWebApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,11 @@ using System.Threading.Tasks;
 namespace eShopWebApi.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [Route("[controller]")]
+    // I don't want this, because it changes URL of the resource, that is against Rest API best practices.
+    //[Route("v{version:apiVersion}/[controller]")]   
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -22,6 +27,7 @@ namespace eShopWebApi.Controllers
 
 
         [HttpGet]
+        [MapToApiVersion("1.0")]
         public async Task<ICollection<GetProductVM>> GetProducts()
         {
             var products = await _productService.GetProducts();
@@ -33,6 +39,13 @@ namespace eShopWebApi.Controllers
                 Price = p.Price,
                 Description = p.Description
             }).ToList();
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public async Task<ICollection<GetProductVM>> GetProductsPaginated()
+        {
+            return Array.Empty<GetProductVM>();
         }
     }
 }

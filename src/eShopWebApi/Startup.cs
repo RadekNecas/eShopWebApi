@@ -50,6 +50,13 @@ namespace eShopWebApi
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
+
+            services.AddApiVersioning(setup =>
+            {
+                setup.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                setup.AssumeDefaultVersionWhenUnspecified = true;
+                setup.ReportApiVersions = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
