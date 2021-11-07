@@ -11,6 +11,7 @@ COPY *.sln .
 COPY ["src/eShopWebApi/*.csproj", "./src/eShopWebApi/"]
 COPY ["src/eShopWebApi.Core/*.csproj", "./src/eShopWebApi.Core/"]
 COPY ["src/eShopWebApi.Infrastructure/*.csproj", "./src/eShopWebApi.Infrastructure/"]
+COPY ["tests/eShopWebApi.InfrastructureTests/*.csproj", "./tests/eShopWebApi.InfrastructureTests/"]
 RUN dotnet restore
 COPY . .
 RUN dotnet build

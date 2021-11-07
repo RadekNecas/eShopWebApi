@@ -27,5 +27,9 @@
     <ProjectReference Include="..\eShopWebApi.Infrastructure\eShopWebApi.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 
 </Project>

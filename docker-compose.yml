@@ -17,3 +17,5 @@ services:
             ConnectionStrings__ApplicationDbConnection: "Server=sqlserver;Database=eShopWebApi;User=sa;Password=SecretPassword123@eShopWebApi;MultipleActiveResultSets=true"
             eShopWebApi__UseInMemoryApplicationDb: "false"
             eShopWebApi__ApplyDbMigrationIfNeeded: "true"
+            eShopWebApi__SeedDatabaseWithTestData: "true"
+            eShopWebApi__PathToInitProductsJsonFile: "Data/InitProductsDatabase.json"

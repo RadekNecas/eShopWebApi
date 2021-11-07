@@ -1,6 +1,10 @@
+using eShopWebApi.Core.Entities.Product;
 using eShopWebApi.Core.RequiredExternalities;
 using eShopWebApi.Core.Services;
+using eShopWebApi.Core.Tools;
+using eShopWebApi.Core.Tools.DatabaseInitialization;
 using eShopWebApi.Infrastructure.Data;
+using eShopWebApi.Infrastructure.Data.Initialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,13 +42,19 @@ namespace eShopWebApi
             }
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EntityFrameworkRepository<>));
+            
+            services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
+            services.AddSingleton<InitDataProvider<Product>, ProductsDataJsonProvider>();
+            services.AddSingleton<IFileReader, FileReader>();
+            
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, 
+            IDatabaseInitializer databaseInitializer, ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -63,11 +73,32 @@ namespace eShopWebApi
                 endpoints.MapControllers();
             });
 
-            ApplyMigrationsIfNeeded(dbContext, logger);
+            ApplyMigrationsIfRequired(dbContext, logger);
+            SeedDatabaseWithTestDataIfRequired(databaseInitializer, logger);
         }
 
+        private void SeedDatabaseWithTestDataIfRequired(IDatabaseInitializer databaseInitializer, ILogger<Startup> logger)
+        {
+            if(Configuration.GetValue<bool>("eShopWebApi:SeedDatabaseWithTestData"))
+            {
+                logger.LogInformation("Database initialization with test data required.");
+                if (databaseInitializer.GetExistingRecordsCount() == 0)
+                {
+                    databaseInitializer.InitializeDatabase();
+                    logger.LogInformation("Database was initialized with test data");
+                }
+                else
+                {
+                    logger.LogInformation("Database already contains data. Initialization was skipped.");
+                }
+            }
+            else
+            {
+                logger.LogInformation("Database initialization with test data was not required. Initialization skipped.");
+            }
+        }
 
-        private void ApplyMigrationsIfNeeded(ApplicationDbContext context, ILogger<Startup> logger)
+        private void ApplyMigrationsIfRequired(ApplicationDbContext context, ILogger<Startup> logger)
         {
             // Migration didn't work for in-memory database so this setting has to be disabled
             var applyMigrationIfNeeded = Configuration.GetValue<bool>("eShopWebApi:ApplyDbMigrationIfNeeded");
