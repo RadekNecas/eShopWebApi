@@ -28,13 +28,25 @@ namespace eShopWebApi.Core.Tools
             return argumentValue;
         }
 
-        public static decimal ReturnIfPositiveNumber(decimal argumentValue, string argumentName)
+        public static void IsPositiveNumber(decimal argumentValue, string argumentName)
         {
             if (argumentValue < 0)
             {
                 throw new ArgumentException($"{argumentName} cannot be negative.", argumentName);
             }
+        }
 
+        public static void IsPositiveNumber(int argumentValue, string argumentName)
+        {
+            if (argumentValue < 0)
+            {
+                throw new ArgumentException($"{argumentName} cannot be negative.", argumentName);
+            }
+        }
+
+        public static decimal ReturnIfPositiveNumber(decimal argumentValue, string argumentName)
+        {
+            IsPositiveNumber(argumentValue, argumentName);
             return argumentValue;
         }
     }
