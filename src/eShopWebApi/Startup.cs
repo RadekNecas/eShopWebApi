@@ -16,7 +16,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace eShopWebApi
 {
@@ -74,6 +77,8 @@ namespace eShopWebApi
             services.AddSwaggerGen(setup => 
             {
                 setup.OperationFilter<AddResponseHeadersFilter>();
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                setup.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
             services.ConfigureOptions<ConfigureSwaggerOptions>();
 
