@@ -17,5 +17,25 @@ namespace eShopWebApi.Core.Tools
             IsNotNull(argumentValue, argumentName);
             return argumentValue;
         }
+
+        public static string ReturnIfNotNullOrEmpty(string argumentValue, string argumentName)
+        {
+            if(string.IsNullOrEmpty(argumentValue))
+            {
+                throw new ArgumentException($"{argumentName} cannot be empty.", argumentName);
+            }
+
+            return argumentValue;
+        }
+
+        public static decimal ReturnIfPositiveNumber(decimal argumentValue, string argumentName)
+        {
+            if (argumentValue < 0)
+            {
+                throw new ArgumentException($"{argumentName} cannot be negative.", argumentName);
+            }
+
+            return argumentValue;
+        }
     }
 }
