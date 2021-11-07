@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data;
+
 
 namespace eShopWebApi.Infrastructure.Data
 {
@@ -30,7 +32,7 @@ namespace eShopWebApi.Infrastructure.Data
 
         public async Task<IReadOnlyList<T>> ListAsync(IQuerySpecification<T> specification, CancellationToken cancellationToken = default)
         {
-            DbSet<T> data = EvaluateSpecification(specification);
+            var data = EvaluateSpecification(specification);
 
             return await data.ToListAsync(cancellationToken);
         }
@@ -42,7 +44,7 @@ namespace eShopWebApi.Infrastructure.Data
 
         public async Task<int> CountAsync(IQuerySpecification<T> specification, CancellationToken cancellationToken = default)
         {
-            DbSet<T> data = EvaluateSpecification(specification);
+            var data = EvaluateSpecification(specification);
 
             return await data.CountAsync(cancellationToken);
         }
@@ -59,24 +61,25 @@ namespace eShopWebApi.Infrastructure.Data
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        private DbSet<T> EvaluateSpecification(IQuerySpecification<T> specification)
+        private IQueryable<T> EvaluateSpecification(IQuerySpecification<T> specification)
         {
-            var data = _dbContext.Set<T>();
+            IQueryable<T> data = _dbContext.Set<T>();
 
             if (specification.HasQuery)
             {
-                data.Where(specification.Query);
+                data = data.Where(specification.Query);
             }
 
             if (specification.IsOrdered)
             {
-                data.OrderBy(specification.OrderBy);
+                data = data.OrderBy(specification.OrderBy);
+                data.OrderBy(d => d.Id);
             }
 
             if (specification.IsPaginated)
             {
-                data.Skip(specification.Skip);
-                data.Take(specification.Take);
+                data = data.Skip(specification.Skip);
+                data = data.Take(specification.Take);
             }
 
             return data;

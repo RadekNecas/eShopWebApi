@@ -6,7 +6,7 @@ namespace eShopWebApi.Core.RequiredExternalities
 {
     public interface IQuerySpecification<T> where T : BaseEntity, IAggregateRoot
     {
-        Func<T, bool> Query { get; }
+        Expression<Func<T, bool>> Query { get; }
         bool HasQuery { get; }
         bool IsPaginated { get; }
         int Skip { get; }
@@ -14,6 +14,6 @@ namespace eShopWebApi.Core.RequiredExternalities
 
         bool IsOrdered { get; }
 
-        Expression<Func<T, object>> OrderBy { get; }
+        Expression<Func<T, int>> OrderBy { get; }
     }
 }
