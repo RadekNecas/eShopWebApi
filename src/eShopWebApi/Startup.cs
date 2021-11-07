@@ -6,6 +6,7 @@ using eShopWebApi.Core.Tools.DatabaseInitialization;
 using eShopWebApi.Helpers;
 using eShopWebApi.Infrastructure.Data;
 using eShopWebApi.Infrastructure.Data.Initialization;
+using eShopWebApi.Middlewares;
 using eShopWebApi.SwaggerConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -93,11 +94,7 @@ namespace eShopWebApi
             IApiVersionDescriptionProvider apiVersionDescriptionProvider,
             ApplicationDbContext dbContext)
         {
-            if (env.IsDevelopment())
-            {
-                logger.LogInformation("Developer exception page will be used.");
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 
@@ -119,6 +116,7 @@ namespace eShopWebApi
                         description.GroupName.ToUpperInvariant());
                 }
             });
+
 
             ApplyMigrationsIfRequired(dbContext, logger);
             SeedDatabaseWithTestDataIfRequired(databaseInitializer, logger);

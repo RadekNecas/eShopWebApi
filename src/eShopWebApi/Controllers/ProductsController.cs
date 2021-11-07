@@ -5,6 +5,7 @@ using eShopWebApi.Helpers;
 using eShopWebApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace eShopWebApi.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/[controller]")]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(InternalServerErrorResponse))]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -78,6 +79,7 @@ namespace eShopWebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(EmptyResponse))]
         public async Task<ActionResult<GetProductResponse>>GetProduct(int id)
         {
+            throw new ArgumentException();
             var product = await _productService.GetProductAsync(id);
             if(product == null)
             {
