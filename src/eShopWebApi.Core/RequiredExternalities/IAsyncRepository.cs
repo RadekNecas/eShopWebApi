@@ -7,6 +7,8 @@ namespace eShopWebApi.Core.RequiredExternalities
 {
     public interface IAsyncRepository<T> where T : BaseEntity, IAggregateRoot
     {
+        Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
         Task<IReadOnlyList<T>> ListAsync(CancellationToken cancellationToken = default);
 
         Task<IReadOnlyList<T>> ListAsync(IQuerySpecification<T> specification, CancellationToken cancellationToken = default);

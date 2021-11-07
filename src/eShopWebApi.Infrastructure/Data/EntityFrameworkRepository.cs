@@ -18,6 +18,11 @@ namespace eShopWebApi.Infrastructure.Data
             _dbContext = Guard.ReturnIfChecked(dbContext, nameof(dbContext));
         }
 
+        public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Set<T>().FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
+        }
+
         public async Task<IReadOnlyList<T>> ListAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Set<T>().ToListAsync(cancellationToken);
