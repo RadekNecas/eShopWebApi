@@ -11,10 +11,9 @@ namespace eShopWebApi.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [ApiVersion("1.1")]
+    [ApiVersion("2.0")]
     [Route("[controller]")]
-    // I don't want this, because it changes URL of the resource, that is against Rest API best practices.
-    //[Route("v{version:apiVersion}/[controller]")]   
+    [Route("v{version:apiVersion}/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -42,7 +41,7 @@ namespace eShopWebApi.Controllers
         }
 
         [HttpGet]
-        [MapToApiVersion("1.1")]
+        [MapToApiVersion("2.0")]
         public async Task<ICollection<GetProductVM>> GetProductsPaginated()
         {
             return Array.Empty<GetProductVM>();

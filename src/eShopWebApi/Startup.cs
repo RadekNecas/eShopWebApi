@@ -5,8 +5,10 @@ using eShopWebApi.Core.Tools;
 using eShopWebApi.Core.Tools.DatabaseInitialization;
 using eShopWebApi.Infrastructure.Data;
 using eShopWebApi.Infrastructure.Data.Initialization;
+using eShopWebApi.SwaggerConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,11 +44,11 @@ namespace eShopWebApi
             }
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EntityFrameworkRepository<>));
-            
+
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
             services.AddSingleton<InitDataProvider<Product>, ProductsDataJsonProvider>();
             services.AddSingleton<IFileReader, FileReader>();
-            
+
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
@@ -57,11 +59,24 @@ namespace eShopWebApi
                 setup.AssumeDefaultVersionWhenUnspecified = true;
                 setup.ReportApiVersions = true;
             });
+
+            services.AddVersionedApiExplorer(setup =>
+            {
+                setup.GroupNameFormat = "'v'VVV";
+                setup.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddSwaggerGen();
+            services.ConfigureOptions<ConfigureSwaggerOptions>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, 
-            IDatabaseInitializer databaseInitializer, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, 
+            IWebHostEnvironment env, 
+            ILogger<Startup> logger,
+            IDatabaseInitializer databaseInitializer, 
+            IApiVersionDescriptionProvider apiVersionDescriptionProvider,
+            ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -80,13 +95,23 @@ namespace eShopWebApi
                 endpoints.MapControllers();
             });
 
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                foreach(var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant());
+                }
+            });
+
             ApplyMigrationsIfRequired(dbContext, logger);
             SeedDatabaseWithTestDataIfRequired(databaseInitializer, logger);
         }
 
         private void SeedDatabaseWithTestDataIfRequired(IDatabaseInitializer databaseInitializer, ILogger<Startup> logger)
         {
-            if(Configuration.GetValue<bool>("eShopWebApi:SeedDatabaseWithTestData"))
+            if (Configuration.GetValue<bool>("eShopWebApi:SeedDatabaseWithTestData"))
             {
                 logger.LogInformation("Database initialization with test data required.");
                 if (databaseInitializer.GetExistingRecordsCount() == 0)
