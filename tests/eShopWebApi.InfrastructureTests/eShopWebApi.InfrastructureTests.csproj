@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\eShopWebApi.Infrastructure\eShopWebApi.Infrastructure.csproj" />
+    <ProjectReference Include="..\eShopWebApi.SharedTests\eShopWebApi.SharedTests.csproj" />
   </ItemGroup>
 
 </Project>
