@@ -3,6 +3,7 @@ using eShopWebApi.Core.RequiredExternalities;
 using eShopWebApi.Core.Services;
 using eShopWebApi.Core.Tools;
 using eShopWebApi.Core.Tools.DatabaseInitialization;
+using eShopWebApi.Helpers;
 using eShopWebApi.Infrastructure.Data;
 using eShopWebApi.Infrastructure.Data.Initialization;
 using eShopWebApi.SwaggerConfigurationOptions;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Filters;
 using System.Linq;
 
 namespace eShopWebApi
@@ -51,6 +53,9 @@ namespace eShopWebApi
 
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<IPagingHelper, PagingHelper>();
+
             services.AddControllers();
 
             services.AddApiVersioning(setup =>
@@ -66,8 +71,13 @@ namespace eShopWebApi
                 setup.SubstituteApiVersionInUrl = true;
             });
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(setup => 
+            {
+                setup.OperationFilter<AddResponseHeadersFilter>();
+            });
             services.ConfigureOptions<ConfigureSwaggerOptions>();
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

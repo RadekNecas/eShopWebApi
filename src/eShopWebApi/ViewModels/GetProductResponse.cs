@@ -1,6 +1,6 @@
 ﻿namespace eShopWebApi.ViewModels
 {
-    public class GetProductVM
+    public class GetProductResponse
     {
         public int Id { get; set; }
         public string Name { get; set; }
