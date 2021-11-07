@@ -1,4 +1,5 @@
 ﻿using eShopWebApi.Core.Entities.Product;
+using eShopWebApi.Core.QuerySpecifications;
 using eShopWebApi.Core.RequiredExternalities;
 using eShopWebApi.Core.Tools;
 using System.Collections.Generic;
@@ -18,9 +19,23 @@ namespace eShopWebApi.Core.Services
         }
 
 
-        public async Task<IReadOnlyList<Product>> GetProducts(CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Product>> GetProductsAsync(CancellationToken cancellationToken = default)
         {
             return await _repository.ListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Product>> GetProductsAsync(int offset, int limit, CancellationToken cancellationToken = default)
+        {
+            Guard.IsPositiveNumber(offset, nameof(offset));
+            Guard.IsPositiveNumber(limit, nameof(limit));
+
+            var specification = new PagedDataSpecification<Product>(offset, limit);
+            return await _repository.ListAsync(specification, cancellationToken);
+        }
+
+        public async Task<int> GetProductsTotalCountAsync(CancellationToken cancellationToken = default)
+        {
+            return await _repository.CountAsync(cancellationToken);
         }
     }
 }
