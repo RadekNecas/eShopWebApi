@@ -60,5 +60,17 @@ namespace eShopWebApi.Controllers
 
             return _mapper.Map<List<GetProductResponse>>(products);
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetProductResponse>>GetProduct(int id)
+        {
+            var product = await _productService.GetProductAsync(id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace eShopWebApi.Core.Services
         Task<IReadOnlyList<Product>> GetProductsAsync(int offset, int limit, CancellationToken cancellationToken = default);
 
         Task<int> GetProductsTotalCountAsync(CancellationToken cancellationToken = default);
+
+        Task<Product> GetProductAsync(int id, CancellationToken cancellationToken = default);
     }
 }

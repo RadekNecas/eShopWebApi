@@ -12,12 +12,10 @@ namespace eShopWebApi.Core.Services
     {
         private readonly IAsyncRepository<Product> _repository;
 
-
-        public ProductService(IAsyncRepository<Product> repository)
+        public async Task<Product> GetProductAsync(int id, CancellationToken cancellationToken = default)
         {
-            _repository = Guard.ReturnIfChecked(repository, nameof(repository));
+            return await _repository.GetByIdAsync(id);
         }
-
 
         public async Task<IReadOnlyList<Product>> GetProductsAsync(CancellationToken cancellationToken = default)
         {
@@ -36,6 +34,11 @@ namespace eShopWebApi.Core.Services
         public async Task<int> GetProductsTotalCountAsync(CancellationToken cancellationToken = default)
         {
             return await _repository.CountAsync(cancellationToken);
+        }
+
+        public ProductService(IAsyncRepository<Product> repository)
+        {
+            _repository = Guard.ReturnIfChecked(repository, nameof(repository));
         }
     }
 }
