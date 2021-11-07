@@ -38,8 +38,8 @@ namespace eShopWebApi.Helpers
                 var prevLimit = 0;
                 if (prevOffset < 0)
                 {
+                    prevLimit = offset;
                     prevOffset = 0;
-                    prevLimit = prevLimit - prevOffset;
                 }
                 else
                 {
