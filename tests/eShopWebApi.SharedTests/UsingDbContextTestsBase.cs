@@ -1,6 +1,5 @@
 ﻿using eShopWebApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -32,15 +31,21 @@ namespace eShopWebApi.SharedTests
 
         protected virtual void Seed<T>(IEnumerable<T> dataToInsert)
         {
-            using (var context = CreateContext)
+            using (var context = CreateContext())
             {
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                context.AddRange(dataToInsert);
+
+                // TODO: EF Core uses wrong method overload here for AddRange(). It selects AddRange(params T) instead of
+                // AddRange(IEnumerable<T>). This throws exception that type T[] is not attached to context via DBSet.
+                foreach(var record in dataToInsert)
+                {
+                    context.Add(record);
+                }
                 context.SaveChanges();
             }
         }
 
-        protected virtual ApplicationDbContext CreateContext => new ApplicationDbContext(ContextOptions);
+        protected virtual ApplicationDbContext CreateContext() => new ApplicationDbContext(ContextOptions);
     }
 }
