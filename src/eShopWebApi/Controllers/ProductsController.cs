@@ -21,6 +21,9 @@ namespace eShopWebApi.Controllers
     [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ServerErrorResponse))]
     public class ProductsController : ControllerBase
     {
+        private const int PagingDefaultLimit = 10;
+        private const int PagingDefaultOffset = 0;
+
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
         private readonly IPagingHelper _pagingHelper;
@@ -66,8 +69,11 @@ namespace eShopWebApi.Controllers
         [SwaggerResponseHeader((int)HttpStatusCode.OK, HttpConstants.HeaderPagingPreviousPage, "string", "URL to previous page")]
         [SwaggerResponseHeader((int)HttpStatusCode.OK, HttpConstants.HeaderPagingNextPage, "string", "URL to next page")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetProductResponse[]))]
-        public async Task<ICollection<GetProductResponse>> GetProductsPaginated(int offset = 0, int limit = 10)
+        public async Task<ICollection<GetProductResponse>> GetProductsPaginated(int offset = PagingDefaultOffset, int limit = PagingDefaultLimit)
         {
+            if (offset < 0) offset = PagingDefaultOffset;
+            if (limit < 0) limit = PagingDefaultLimit;
+
             var products = await _productService.GetProductsAsync(offset, limit);
             var totalProductsCount = await _productService.GetProductsTotalCountAsync();
 
