@@ -14,11 +14,11 @@ namespace eShopWebApi.Infrastructure.Data.EntityTypeConfigurations
         {
             builder.Property(e => e.Name)
                 .IsRequired()
-                .HasMaxLength(150);
+                .HasMaxLength(Product.MaxNameLength);
 
             builder.Property(e => e.ImgUri)
                 .IsRequired()
-                .HasMaxLength(2048);
+                .HasMaxLength(Product.MaxImgUriLength);
 
             builder.Property(e => e.Price)
                 .IsRequired()
@@ -26,7 +26,7 @@ namespace eShopWebApi.Infrastructure.Data.EntityTypeConfigurations
 
             builder.Property(e => e.Description)
                 .IsRequired(false)
-                .HasMaxLength(300);
+                .HasMaxLength(Product.MaxDescriptionLength);
         }
     }
 }

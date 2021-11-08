@@ -49,5 +49,22 @@ namespace eShopWebApi.Core.Tools
             IsPositiveNumber(argumentValue, argumentName);
             return argumentValue;
         }
+
+        public static string ReturnIfStringLengthVerified(string newValue, int maxLength, string argumentName)
+        {
+            if (newValue != null && newValue.Length > maxLength)
+            {
+                throw new ArgumentException($"{argumentName} cannot be longer than {maxLength} characters.", argumentName);
+            }
+
+            return newValue;
+        }
+
+        public static string ReturnIfNotNullStringLengthVerified(string newValue, int maxLength, string argumentName)
+        {
+            IsNotNull(newValue, argumentName);
+
+            return ReturnIfStringLengthVerified(newValue, maxLength, argumentName);
+        }
     }
 }
