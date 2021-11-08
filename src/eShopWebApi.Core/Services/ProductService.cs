@@ -40,5 +40,17 @@ namespace eShopWebApi.Core.Services
         {
             _repository = Guard.ReturnIfChecked(repository, nameof(repository));
         }
+
+        public async Task<Product> UpdateProductDescription(int id, string description, CancellationToken cancellationToken = default)
+        {
+            var product = await _repository.GetByIdAsync(id, cancellationToken);
+            if(product != null)
+            {
+                product.SetDescription(description);
+                await _repository.UpdateAsync(product, cancellationToken);
+            }
+
+            return product;
+        }
     }
 }

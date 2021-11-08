@@ -5,7 +5,6 @@ using eShopWebApi.Helpers;
 using eShopWebApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -86,6 +85,21 @@ namespace eShopWebApi.Controllers
             }
 
             return Ok(product);
+        }
+
+        [HttpPut("{id:int}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetProductResponse))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(EmptyResponse))]
+        public async Task<ActionResult<GetProductResponse>> UpdateProduct(int id, [FromBody]UpdateProductRequest productRequest)
+        {
+            var updatedProduct = await _productService.UpdateProductDescription(id, productRequest.Description);
+            if (updatedProduct == null)
+            {
+                return NotFound(new EmptyResponse());
+            }
+
+            return Ok(updatedProduct);
+
         }
     }
 }

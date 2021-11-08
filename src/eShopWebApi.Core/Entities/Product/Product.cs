@@ -28,5 +28,10 @@ namespace eShopWebApi.Core.Entities.Product
 
         [JsonInclude]
         public string Description { get; private set; }
+
+        public void SetDescription(string newDescription)
+        {
+            Description = newDescription?.Trim();
+        }
     }
 }
