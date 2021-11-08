@@ -57,6 +57,7 @@ namespace eShopWebApi
             services.AddScoped<IProductService, ProductService>();
 
             services.AddHttpContextAccessor();
+            services.AddSingleton<IPagingConfigurationCalculator, PagingConfigurationCalculator>();
             services.AddScoped<IPagingHelper, PagingHelper>();
 
             services.AddControllers();

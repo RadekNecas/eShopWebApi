@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace eShopWebApi.Helpers
 {
-    // TODO: Refactor - separate responsibilities for creating paging information and reading/writing from context for better testing
     // TODO: Cover creating of paging information with unit tests.
     public class PagingHelper : IPagingHelper
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPagingConfigurationCalculator _pagingCalculator;
 
-        public PagingHelper(IHttpContextAccessor httpContextAccessor)
+        public PagingHelper(IHttpContextAccessor httpContextAccessor, IPagingConfigurationCalculator pagingCalculator)
         {
             _httpContextAccessor = Guard.ReturnIfChecked(httpContextAccessor, nameof(httpContextAccessor));
+            _pagingCalculator = Guard.ReturnIfChecked(pagingCalculator, nameof(pagingCalculator));
         }
 
         public void UpdateHttpHeadersWithPagingInformations(int totalItemsCount)
@@ -22,54 +23,36 @@ namespace eShopWebApi.Helpers
 
         public void UpdateHttpHeadersWithPagingInformations(int totalItemsCount, int offset, int currentPageLimit)
         {
-            var request = _httpContextAccessor.HttpContext.Request;
-            string tmpParamValue;
-
             // Total count
             UpdateHttpHeadersWithPagingInformations(totalItemsCount);
 
             // Current page link
-            _httpContextAccessor.HttpContext.Response.Headers[HttpConstants.HeaderPagingCurrentPage] = request.GetFullPagingUrl().ToString();
-            AddHeader(HttpConstants.HeaderPagingCurrentPage, request.GetFullPagingUrl().ToString());
-            
-            // Previous page link
-            var uriBuilder = request.GetUriBuilderWithCurrentBaseUrl();
-            if (offset > 0)
-            {
-                var prevOffset = offset - currentPageLimit;
-                var prevLimit = 0;
-                if (prevOffset < 0)
-                {
-                    prevLimit = offset;
-                    prevOffset = 0;
-                }
-                else
-                {
-                    prevLimit = currentPageLimit;
-                }
-                uriBuilder.Query = $"{HttpConstants.UrlQueryParamOffset}={prevOffset}&{HttpConstants.UrlQueryParamLimit}={prevLimit}";
-                tmpParamValue = uriBuilder.Uri.ToString();
-            }
-            else
-            {
-                tmpParamValue = string.Empty;
-            }
-            AddHeader(HttpConstants.HeaderPagingPreviousPage, tmpParamValue);
+            var page = new PagingConfiguration(offset, currentPageLimit);
+            var pageUrl = CreateUrlWithPaging(page);
+            AddHeader(HttpConstants.HeaderPagingCurrentPage, pageUrl);
 
+            // Previous page link
+            page = _pagingCalculator.GetConfigurationForPreviousPage(offset, currentPageLimit, totalItemsCount);
+            pageUrl = CreateUrlWithPaging(page);
+            AddHeader(HttpConstants.HeaderPagingPreviousPage, pageUrl);
 
             // Next page link
-            uriBuilder = request.GetUriBuilderWithCurrentBaseUrl();
-            var nextOffset = offset + currentPageLimit;
-            if(nextOffset < totalItemsCount)
+            page = _pagingCalculator.GetConfigurationForNextPage(offset, currentPageLimit, totalItemsCount);
+            pageUrl = CreateUrlWithPaging(page);
+            AddHeader(HttpConstants.HeaderPagingNextPage, pageUrl);
+        }
+
+        private string CreateUrlWithPaging(PagingConfiguration page)
+        {
+            if (page == null)
             {
-                uriBuilder.Query = $"{HttpConstants.UrlQueryParamOffset}={nextOffset}&{HttpConstants.UrlQueryParamLimit}={currentPageLimit}";
-                tmpParamValue = uriBuilder.Uri.ToString();
+                return string.Empty;
             }
-            else
-            {
-                tmpParamValue = string.Empty;
-            }
-            AddHeader(HttpConstants.HeaderPagingNextPage, tmpParamValue);
+
+            var uriBuilder = _httpContextAccessor.HttpContext.Request.GetUriBuilderWithCurrentBaseUrl();
+            uriBuilder.Query = $"{HttpConstants.UrlQueryParamOffset}={page.Offset}&{HttpConstants.UrlQueryParamLimit}={page.Limit}";
+
+            return uriBuilder.Uri.ToString();
         }
 
         private void AddHeader(string key, string value)
