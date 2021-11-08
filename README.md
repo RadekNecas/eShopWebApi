@@ -16,6 +16,8 @@ with Visual Studio (is part of ASP.Net and web development workload). See [SQL S
 for more details. Connection string to a different database or in-memory database can be used. See configuration section for more details.
 Available profiles for `IIS Express` and command line hosting - `eShopWebApi`. Docker and `docker-compose` are not handled within VS and need to be managed from command line.
 
+API will be started on address `http:\\localhost:{free-port}`, default web browser with swagger documentation on address `http:\\localhost:{free-port}\swagger` will be opened.
+
 You can run unit tests from Visual Studio.
 
 ## With dotnet from commandline
@@ -24,6 +26,8 @@ You can use these commands from root of the project:
 * start server: `dotnet run --project .\src\eShopWebApi\eShopWebApi.csproj`
 * run tests: `dotnet test`
 
+API will be started on address `http:\\localhost:{free-port}`. Look into the commandline for concrete address. Look into `http:\\localhost:{free-port}\swagger` for swagger documentation.
+
 ## With Docker
 Docker environment is managed with `docker-compose`. See configuration file [docker-compose.yml](./docker-compose.yml) You need to install `Docker` and `docker-compose` tool.
 Build runs two containers `eShopWebApi` with API endpoint and `sqlserver` with Microsoft SQL server.
@@ -31,6 +35,8 @@ You can manage environment from commandline with these commands from the root di
 * build: `docker-compose build`
 * start containers: `docker-compose up -d`
 * stop and remove containers: `docker-compose down`
+
+API will be started on address `http:\\localhost:5000`, look into swagger documentation on `http:\\localhost:5000\swagger` for more details.
 
 > :warning: Docker configuration is simplified. Some confidential informations, like connection string etc, are stored as environment variables. Also there is no override for docker. This would have to be handled better in real production environment.
 
@@ -62,5 +68,7 @@ interpretation of specification (might be useful for demo purposes).
 secure storage or other security requirements were not specified.
 * `docker-compose` configuration is very simple and basic. It would require some improvements for production (secure storage, overrides, kustomization, build optimization, ...).
 * `docker-compose` environment works only with http (https not working). It was not in requirements. But https should be configured for production. Now https works only from commandline or Visual Studio.
-* Docker and `docker-compose` don't have profiles in Visual Studio. I've run into some issues and I personally prefer working with these tools from command line.
+* `docker-compose` don't have profiles in Visual Studio. I've run into some issues and I personally prefer working with these tools from command line.
 * Github Actions or other build pipeline is not implemented for this project. It was not part of the specification.
+* I've implemented only test useful for implementation. Page funkcionality can be easilly covered with combination of devtesting and unit test.
+But reall production code would require better test coverage.
