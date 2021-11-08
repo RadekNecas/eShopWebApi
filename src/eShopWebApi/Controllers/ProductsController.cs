@@ -11,11 +11,14 @@ using System.Threading.Tasks;
 
 namespace eShopWebApi.Controllers
 {
+    /// <summary>
+    /// Endpoint with versioning support. Provides information about products.
+    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/[controller]")]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(InternalServerErrorResponse))]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ServerErrorResponse))]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -63,7 +66,7 @@ namespace eShopWebApi.Controllers
         [SwaggerResponseHeader((int)HttpStatusCode.OK, HttpConstants.HeaderPagingPreviousPage, "string", "URL to previous page")]
         [SwaggerResponseHeader((int)HttpStatusCode.OK, HttpConstants.HeaderPagingNextPage, "string", "URL to next page")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetProductResponse[]))]
-        public async Task<ICollection<GetProductResponse>> GetProductsPaginated(int offset = 0, int limit = 3)
+        public async Task<ICollection<GetProductResponse>> GetProductsPaginated(int offset = 0, int limit = 10)
         {
             var products = await _productService.GetProductsAsync(offset, limit);
             var totalProductsCount = await _productService.GetProductsTotalCountAsync();
@@ -99,7 +102,6 @@ namespace eShopWebApi.Controllers
             }
 
             return Ok(updatedProduct);
-
         }
     }
 }

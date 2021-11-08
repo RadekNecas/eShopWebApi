@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace eShopWebApi.Helpers
 {
+    // TODO: Refactor - separate responsibilities for creating paging information and reading/writing from context for better testing
+    // TODO: Cover creating of paging information with unit tests.
     public class PagingHelper : IPagingHelper
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

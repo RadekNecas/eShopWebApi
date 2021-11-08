@@ -158,5 +158,29 @@ namespace eShopWebApi.InfrastructureTests
                 testProduct.Should().BeNull();
             }
         }
+
+        [Test]
+        public async Task UpdateAsync_EntityChanged_ProductUpdatedCorrectly()
+        {
+            using (var dbContext = CreateContext())
+            {
+                // Arrange
+                var repository = new EntityFrameworkRepository<Product>(dbContext);
+                var existingProduct = await dbContext.Products.FirstAsync();
+                var originalDescription = existingProduct.Description;
+                var newDescription = $"Test changed description. Original desc: {originalDescription}";
+                existingProduct.SetDescription(newDescription);
+
+                // Act
+                await repository.UpdateAsync(existingProduct);
+
+                // Assert
+                existingProduct.Description.Should().Be(newDescription, "Description in already loaded product should still be changed after update");
+
+                var newProduct = await dbContext.Products.FromSqlRaw($"SELECT * FROM Products WHERE Id = {existingProduct.Id}").FirstAsync();
+                existingProduct.Description.Should().Be(newDescription, 
+                    "Description in newly loaded product does not have correct value");
+            }
+        }
     }
 }

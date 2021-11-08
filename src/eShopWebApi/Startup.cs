@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Filters;
 using System;
@@ -36,7 +35,7 @@ namespace eShopWebApi
         private bool ShouldUseInMemoryDb => Configuration.GetValue<bool>("eShopWebApi:UseInMemoryApplicationDb");
 
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // TODO: Cleanup services configuration. Separate into smaller extension methods in Configuration directory.
         public void ConfigureServices(IServiceCollection services)
         {
             if (ShouldUseInMemoryDb)
@@ -122,41 +121,56 @@ namespace eShopWebApi
             SeedDatabaseWithTestDataIfRequired(databaseInitializer, logger);
         }
 
+        // TODO: Implement methods as extension methods on app.
         private void SeedDatabaseWithTestDataIfRequired(IDatabaseInitializer databaseInitializer, ILogger<Startup> logger)
         {
-            if (Configuration.GetValue<bool>("eShopWebApi:SeedDatabaseWithTestData"))
+            try
             {
-                logger.LogInformation("Database initialization with test data required.");
-                if (databaseInitializer.GetExistingRecordsCount() == 0)
+                if (Configuration.GetValue<bool>("eShopWebApi:SeedDatabaseWithTestData"))
                 {
-                    databaseInitializer.InitializeDatabase();
-                    logger.LogInformation("Database was initialized with test data");
+                    logger.LogInformation("Database initialization with test data required.");
+                    if (databaseInitializer.GetExistingRecordsCount() == 0)
+                    {
+                        databaseInitializer.InitializeDatabase();
+                        logger.LogInformation("Database was initialized with test data");
+                    }
+                    else
+                    {
+                        logger.LogInformation("Database already contains data. Initialization was skipped.");
+                    }
                 }
                 else
                 {
-                    logger.LogInformation("Database already contains data. Initialization was skipped.");
+                    logger.LogInformation("Database initialization with test data was not required. Initialization skipped.");
                 }
             }
-            else
+            catch(Exception ex)
             {
-                logger.LogInformation("Database initialization with test data was not required. Initialization skipped.");
+                logger.LogError(ex, "Database initialization failed. Restart application to try it again.");
             }
         }
 
         private void ApplyMigrationsIfRequired(ApplicationDbContext context, ILogger<Startup> logger)
         {
-            // Migration didn't work for in-memory database so this setting has to be disabled
-            var applyMigrationIfNeeded = Configuration.GetValue<bool>("eShopWebApi:ApplyDbMigrationIfNeeded");
-            if (!ShouldUseInMemoryDb && applyMigrationIfNeeded && context.Database.GetPendingMigrations().Any())
+            try
             {
-                context.Database.Migrate();
-                logger.LogInformation("Database was migrated to the latest version. ShouldUseInMemoryDb={shouldUseInMemoryDb}, ApplyMigrationIfNeeded={applyMigrationIfNeeded}",
-                    ShouldUseInMemoryDb, applyMigrationIfNeeded);
+                // Migration didn't work for in-memory database so this setting has to be disabled
+                var applyMigrationIfNeeded = Configuration.GetValue<bool>("eShopWebApi:ApplyDbMigrationIfNeeded");
+                if (!ShouldUseInMemoryDb && applyMigrationIfNeeded && context.Database.GetPendingMigrations().Any())
+                {
+                    context.Database.Migrate();
+                    logger.LogInformation("Database was migrated to the latest version. ShouldUseInMemoryDb={shouldUseInMemoryDb}, ApplyMigrationIfNeeded={applyMigrationIfNeeded}",
+                        ShouldUseInMemoryDb, applyMigrationIfNeeded);
+                }
+                else
+                {
+                    logger.LogInformation("Database migration was skipped. ShouldUseInMemoryDb={shouldUseInMemoryDb}, ApplyMigrationIfNeeded={applyMigrationIfNeeded}",
+                        ShouldUseInMemoryDb, applyMigrationIfNeeded);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                logger.LogInformation("Database migration was skipped. ShouldUseInMemoryDb={shouldUseInMemoryDb}, ApplyMigrationIfNeeded={applyMigrationIfNeeded}",
-                    ShouldUseInMemoryDb, applyMigrationIfNeeded);
+                logger.LogError(ex, "Database migrations were not applied due to error. Database was not migrated. Restart application to try it again.");
             }
         }
     }

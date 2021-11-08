@@ -28,7 +28,7 @@ namespace eShopWebApi.Middlewares
                 response.ContentType = "application/json";
                 response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                var result = JsonSerializer.Serialize(new InternalServerErrorResponse("Internal Server Error"));
+                var result = JsonSerializer.Serialize(new ServerErrorResponse("Internal Server Error"));
                 await response.WriteAsync(result);
             }
         }
