@@ -5,7 +5,7 @@ services:
         expose:
             - 1433
         environment:
-            SA_PASSWORD: "SecretPassword123@eShopWebApi"
+            SA_PASSWORD: "SecretPassword123!eShopWebApi"
             ACCEPT_EULA: "Y"
     webapi:
         build: .
@@ -14,7 +14,7 @@ services:
         depends_on:
             - sqlserver
         environment:
-            ConnectionStrings__ApplicationDbConnection: "Server=sqlserver;Database=eShopWebApi;User=sa;Password=SecretPassword123@eShopWebApi;MultipleActiveResultSets=true"
+            ConnectionStrings__ApplicationDbConnection: "Server=sqlserver;Database=eShopWebApi;User=sa;Password=SecretPassword123!eShopWebApi;MultipleActiveResultSets=true"
             eShopWebApi__UseInMemoryApplicationDb: "false"
             eShopWebApi__ApplyDbMigrationIfNeeded: "true"
             eShopWebApi__SeedDatabaseWithTestData: "true"
