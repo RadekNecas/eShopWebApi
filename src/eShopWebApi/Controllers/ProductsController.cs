@@ -99,6 +99,7 @@ namespace eShopWebApi.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetProductResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(EmptyResponse))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResponse))]
         public async Task<ActionResult<GetProductResponse>> UpdateProduct(int id, [FromBody]UpdateProductRequest productRequest)
         {
             var updatedProduct = await _productService.UpdateProductDescription(id, productRequest.Description);

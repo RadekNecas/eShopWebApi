@@ -17,6 +17,8 @@ for more details. Connection string to a different database or in-memory databas
 Available profiles for `IIS Express` and command line hosting - `eShopWebApi`. Docker and `docker-compose` are not handled within VS and need to be managed from command line.
 
 API will be started on address `http:\\localhost:{free-port}`, default web browser with swagger documentation on address `http:\\localhost:{free-port}\swagger` will be opened.
+For default configuration, you don't have to create database or apply migration manually. Database with name `eShopWebApi` will be created and test data will be inserted.
+This behaviour can be changes by configuration.
 
 You can run unit tests from Visual Studio.
 
