@@ -38,6 +38,8 @@ You can manage environment from commandline with these commands from the root di
 * start containers: `docker-compose up -d`
 * stop and remove containers: `docker-compose down`
 
+> :warning: Sometimes happens that Docker container with mssql server stops accepting sa password. I wasn't able to fix this issue. Workaround is restart of the Docker or PC. 
+
 API will be started on address `http:\\localhost:5000`, look into swagger documentation on `http:\\localhost:5000\swagger` for more details.
 
 > :warning: Docker configuration is simplified. Some confidential informations, like connection string etc, are stored as environment variables. Also there is no override for docker. This would have to be handled better in real production environment.
@@ -64,6 +66,8 @@ is used quite often and it is more readable and understandable from swagger docu
 because data and metadata are separated and for more reasons. Normally I would discuss it with customer or Rest API client and I would implement version that suits them better.
 
 ### Known Limitations
+* Sometimes happened that Docker container with sqlserver does not accept sa password. I was not able to resolve this issue. After restart of computer
+issue disapeare.
 * In-memory database can be used in production code not just in tests. Normally I would never make in-memory DB part of production code. I've implemented it only because of my
 interpretation of specification (might be useful for demo purposes).
 * Some configuration, like connection string etc, should be configured via some secure storage not with env. variables. I've chosen this implementation for simplicity and because
