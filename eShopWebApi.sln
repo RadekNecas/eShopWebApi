@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopWebApi.SharedTests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShopWebApiTests", "tests\eShopWebApiTests\eShopWebApiTests.csproj", "{6EB6F4C8-D3BC-4288-8FDC-9EB67667CF31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShopWebApi.CoreTests", "tests\eShopWebApi.CoreTests\eShopWebApi.CoreTests.csproj", "{13C631C8-BD27-4E18-A67C-9225AAEFCCD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{6EB6F4C8-D3BC-4288-8FDC-9EB67667CF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EB6F4C8-D3BC-4288-8FDC-9EB67667CF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EB6F4C8-D3BC-4288-8FDC-9EB67667CF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C631C8-BD27-4E18-A67C-9225AAEFCCD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C631C8-BD27-4E18-A67C-9225AAEFCCD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C631C8-BD27-4E18-A67C-9225AAEFCCD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C631C8-BD27-4E18-A67C-9225AAEFCCD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{68B474B7-7686-4791-91FE-BA48EA35ED01} = {B2756CE4-6906-4704-A0DF-EF2F624BCF88}
 		{BB769236-A8E8-40D7-8B12-AF857BBD1894} = {B2756CE4-6906-4704-A0DF-EF2F624BCF88}
 		{6EB6F4C8-D3BC-4288-8FDC-9EB67667CF31} = {B2756CE4-6906-4704-A0DF-EF2F624BCF88}
+		{13C631C8-BD27-4E18-A67C-9225AAEFCCD8} = {B2756CE4-6906-4704-A0DF-EF2F624BCF88}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4657D4B5-6496-4D37-AAE6-813AA8A400D7}

@@ -15,6 +15,6 @@ namespace eShopWebApi.Core.Services
 
         Task<Product> GetProductAsync(int id, CancellationToken cancellationToken = default);
 
-        Task<Product> UpdateProductDescription(int id, string description, CancellationToken cancellationToken = default);
+        Task<Product> UpdateProductDescriptionAsync(int id, string description, CancellationToken cancellationToken = default);
     }
 }

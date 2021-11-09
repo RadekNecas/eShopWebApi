@@ -14,6 +14,7 @@ COPY ["src/eShopWebApi.Infrastructure/*.csproj", "./src/eShopWebApi.Infrastructu
 COPY ["tests/eShopWebApi.InfrastructureTests/*.csproj", "./tests/eShopWebApi.InfrastructureTests/"]
 COPY ["tests/eShopWebApi.SharedTests/*.csproj", "./tests/eShopWebApi.SharedTests/"]
 COPY ["tests/eShopWebApiTests/*.csproj", "./tests/eShopWebApiTests/"]
+COPY ["tests/eShopWebApi.CoreTests/*.csproj", "./tests/eShopWebApi.CoreTests/"]
 RUN dotnet restore
 COPY . .
 RUN dotnet build

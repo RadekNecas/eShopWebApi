@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace eShopWebApi.Core.Services
 {
-    // TODO: Cover with a few simple unit tests (get product with paging and update product)
     public class ProductService : IProductService
     {
         private readonly IAsyncRepository<Product> _repository;
@@ -43,7 +42,7 @@ namespace eShopWebApi.Core.Services
             return await _repository.CountAsync(cancellationToken);
         }
 
-        public async Task<Product> UpdateProductDescription(int id, string description, CancellationToken cancellationToken = default)
+        public async Task<Product> UpdateProductDescriptionAsync(int id, string description, CancellationToken cancellationToken = default)
         {
             var product = await _repository.GetByIdAsync(id, cancellationToken);
             if(product != null)

@@ -10,4 +10,10 @@
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>eShopWebApi.CoreTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>
